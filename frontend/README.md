@@ -6,8 +6,12 @@ This is the frontend UI for the Pizza Ordering application built with React, Vit
 
 - **Login Screen**: Email and password authentication UI
 - **Sign Up Screen**: User registration UI with name, email, password, and confirm password fields
+- **Home/Dashboard**: Browse available pizzas grouped by category (Veg, Non-Veg, Special)
+- **Add to Cart**: Add pizzas to cart with quantity tracking
+- **Cart Management**: View cart items, adjust quantities, and remove items
+- **Checkout**: Calculate total and process checkout (console log only)
 - **Form Validation**: Basic client-side validation (required fields, email format, password matching)
-- **Navigation**: Seamless switching between Login and Sign Up screens
+- **Routing**: Client-side navigation between Login, Sign Up, Home, and Cart pages
 
 ## Project Structure
 
@@ -17,8 +21,19 @@ frontend/
 │   ├── components/
 │   │   ├── Login.tsx          # Login component
 │   │   ├── SignUp.tsx         # Sign Up component
-│   │   └── Auth.css           # Shared styles for authentication
-│   ├── App.tsx                # Main app component with view routing
+│   │   ├── Home.tsx           # Home/Dashboard with pizza list
+│   │   ├── Cart.tsx           # Shopping cart page
+│   │   ├── Auth.css           # Shared styles for authentication
+│   │   ├── Home.css           # Home page styles
+│   │   └── Cart.css           # Cart page styles
+│   ├── context/
+│   │   └── CartContext.tsx    # Cart state management
+│   ├── types/
+│   │   ├── Pizza.ts           # Pizza type definition
+│   │   └── CartItem.ts        # Cart item type definition
+│   ├── data/
+│   │   └── pizza.json         # Static pizza data
+│   ├── App.tsx                # Main app with routing
 │   ├── App.css                # App styles
 │   ├── index.css              # Global styles
 │   └── main.tsx               # Entry point
@@ -53,19 +68,66 @@ frontend/
 
 ## Development
 
-The application is currently UI-only with no backend integration. All form submissions are logged to the console.
+The application is currently UI-only with no backend integration. All form submissions and checkout are logged to the console.
+
+### Features Overview
+
+1. **Authentication UI (No Real Auth)**
+   - Login and Sign Up forms with validation
+   - Navigation between auth pages
+   - Direct routing to Home after form submission
+
+2. **Pizza Menu**
+   - Loads pizza data from `src/data/pizza.json`
+   - Displays only available pizzas
+   - Grouped by category: Veg, Non-Veg, Special
+   - Add to Cart functionality
+
+3. **Shopping Cart**
+   - Add multiple quantities of the same pizza
+   - Remove items or decrease quantity
+   - Real-time total calculation
+   - Cart badge showing total items
+
+4. **Checkout**
+   - Console log output of total amount
+   - No actual payment processing
 
 ### Backend Integration Points
 
 The following areas are marked for future backend integration:
 
 1. **Login Component** (`src/components/Login.tsx`):
-   - Line ~67: Add API call for user authentication
-   - TODO: Implement token storage and session management
+   - Add API call for user authentication
+   - TODO: Validate credentials against backend API
+   - TODO: Store authentication token in localStorage/sessionStorage
 
 2. **Sign Up Component** (`src/components/SignUp.tsx`):
-   - Line ~96: Add API call to create new user
-   - TODO: Implement user registration flow
+   - Add API call to create new user
+   - TODO: Send user data to backend API for registration
+   - TODO: Handle API response and store authentication token
+
+3. **Home Component** (`src/components/Home.tsx`):
+   - TODO: Fetch pizza data from backend API instead of local JSON
+   - TODO: Sync cart updates with server
+
+4. **Cart Context** (`src/context/CartContext.tsx`):
+   - TODO: Sync cart state with backend server
+   - TODO: Persist cart across sessions
+
+5. **Cart Component** (`src/components/Cart.tsx`):
+   - TODO: Call checkout API endpoint
+   - TODO: Process payment through payment gateway
+   - TODO: Generate order confirmation
+
+### Pizza Data Structure
+
+The `pizza.json` file contains pizza objects with:
+- `id`: Unique identifier
+- `name`: Pizza name
+- `cost`: Price in dollars
+- `category`: "veg" | "non-veg" | "special"
+- `available`: true | false (only true items are displayed)
 
 ### Form Validation
 
@@ -87,14 +149,28 @@ Basic validation is implemented:
 - **React 18** - UI library
 - **TypeScript** - Type safety
 - **Vite** - Build tool and dev server
+- **React Router** - Client-side routing
+- **React Context API** - State management for cart
 - **CSS3** - Styling
+
+## Application Flow
+
+1. User starts at Login page (`/`)
+2. Can navigate to Sign Up page (`/signup`)
+3. After login/signup, navigates to Home page (`/home`)
+4. Browse pizzas and add to cart
+5. Click cart button to view Cart page (`/cart`)
+6. Adjust quantities or remove items
+7. Click checkout to log total amount
 
 ## Notes
 
-- No routing library is used; view switching is handled via state
-- No API calls are made; all submissions log to console
+- Client-side routing only (React Router)
+- Cart state managed with React Context API
+- No API calls are made; all data is local
 - No authentication/authorization logic is implemented
 - No database or backend services are connected
+- Cart is not persisted (resets on page reload)
 
 import reactDom from 'eslint-plugin-react-dom'
 

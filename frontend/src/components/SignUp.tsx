@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Auth.css';
 
-interface SignUpProps {
-  onSwitchToLogin: () => void;
-}
-
-const SignUp: React.FC<SignUpProps> = ({ onSwitchToLogin }) => {
+const SignUp: React.FC = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -85,10 +83,16 @@ const SignUp: React.FC<SignUpProps> = ({ onSwitchToLogin }) => {
     if (validateForm()) {
       // TODO: Backend integration will be added here
       // This is where the API call to create a new user will happen
+      // TODO: Send user data to backend API for registration
+      // TODO: Handle API response and store authentication token
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { confirmPassword, ...userData } = formData;
       console.log('Sign up form submitted:', userData);
       console.log('TODO: Call backend API endpoint to create new user');
+      
+      // Navigate to home page after successful form validation
+      // In the future, this will only happen after successful API registration
+      navigate('/home');
     }
   };
 
@@ -159,7 +163,7 @@ const SignUp: React.FC<SignUpProps> = ({ onSwitchToLogin }) => {
         <div className="auth-switch">
           <p>
             Already have an account?{' '}
-            <button onClick={onSwitchToLogin} className="link-button">
+            <button onClick={() => navigate('/')} className="link-button">
               Login
             </button>
           </p>

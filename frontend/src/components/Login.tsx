@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Auth.css';
 
-interface LoginProps {
-  onSwitchToSignUp: () => void;
-}
-
-const Login: React.FC<LoginProps> = ({ onSwitchToSignUp }) => {
+const Login: React.FC = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -61,8 +59,14 @@ const Login: React.FC<LoginProps> = ({ onSwitchToSignUp }) => {
     if (validateForm()) {
       // TODO: Backend integration will be added here
       // This is where the API call to authenticate the user will happen
+      // TODO: Validate credentials against backend API
+      // TODO: Store authentication token in localStorage/sessionStorage
       console.log('Login form submitted:', formData);
       console.log('TODO: Call backend API endpoint for authentication');
+      
+      // Navigate to home page after successful form validation
+      // In the future, this will only happen after successful API authentication
+      navigate('/home');
     }
   };
 
@@ -105,7 +109,7 @@ const Login: React.FC<LoginProps> = ({ onSwitchToSignUp }) => {
         <div className="auth-switch">
           <p>
             Don't have an account?{' '}
-            <button onClick={onSwitchToSignUp} className="link-button">
+            <button onClick={() => navigate('/signup')} className="link-button">
               Sign Up
             </button>
           </p>

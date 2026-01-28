@@ -1,0 +1,86 @@
+[
+  {
+    "id": 1,
+    "name": "Margherita Pizza",
+    "cost": 8.99,
+    "category": "veg",
+    "available": true
+  },
+  {
+    "id": 2,
+    "name": "Veggie Supreme",
+    "cost": 11.99,
+    "category": "veg",
+    "available": true
+  },
+  {
+    "id": 3,
+    "name": "Paneer Tikka Pizza",
+    "cost": 12.99,
+    "category": "veg",
+    "available": true
+  },
+  {
+    "id": 4,
+    "name": "Mushroom Delight",
+    "cost": 10.99,
+    "category": "veg",
+    "available": false
+  },
+  {
+    "id": 5,
+    "name": "Pepperoni Pizza",
+    "cost": 13.99,
+    "category": "non-veg",
+    "available": true
+  },
+  {
+    "id": 6,
+    "name": "Chicken BBQ Pizza",
+    "cost": 14.99,
+    "category": "non-veg",
+    "available": true
+  },
+  {
+    "id": 7,
+    "name": "Meat Lovers Pizza",
+    "cost": 15.99,
+    "category": "non-veg",
+    "available": true
+  },
+  {
+    "id": 8,
+    "name": "Hawaiian Pizza",
+    "cost": 12.99,
+    "category": "non-veg",
+    "available": false
+  },
+  {
+    "id": 9,
+    "name": "Truffle Mushroom Special",
+    "cost": 18.99,
+    "category": "special",
+    "available": true
+  },
+  {
+    "id": 10,
+    "name": "Quattro Formaggi Special",
+    "cost": 17.99,
+    "category": "special",
+    "available": true
+  },
+  {
+    "id": 11,
+    "name": "Chef's Special Deluxe",
+    "cost": 19.99,
+    "category": "special",
+    "available": true
+  },
+  {
+    "id": 12,
+    "name": "Gourmet Prosciutto",
+    "cost": 21.99,
+    "category": "special",
+    "available": false
+  }
+]
