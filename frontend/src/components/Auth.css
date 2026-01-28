@@ -57,6 +57,17 @@
   margin-top: 5px;
 }
 
+.error-message {
+  background: #fee;
+  border: 1px solid #e74c3c;
+  color: #e74c3c;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  text-align: center;
+}
+
 .btn-primary {
   width: 100%;
   padding: 12px;
@@ -72,6 +83,11 @@
 
 .btn-primary:hover {
   opacity: 0.9;
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .auth-switch {

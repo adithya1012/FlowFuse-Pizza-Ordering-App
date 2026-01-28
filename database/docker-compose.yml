@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  mysql:
+    # Use official MySQL 8.0 image from Docker Hub
+    image: mysql:8.0
+    
+    # Container name for easy reference
+    container_name: pizza_app_mysql
+    
+    # Restart policy - always restart if container stops
+    restart: always
+    
+    # Environment variables for MySQL configuration
+    environment:
+      # Root password for MySQL (change this in production!)
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword123}
+      
+      # Database to be created on startup
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-pizza_app_db}
+      
+      # Optional: Create a non-root user for the application
+      MYSQL_USER: ${MYSQL_USER:-pizza_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-pizza_password123}
+    
+    # Port mapping: host:container
+    # MySQL default port 3306 mapped to host port 3307 to avoid conflicts
+    # Connect from host using port 3307
+    ports:
+      - "3307:3306"
+    
+    # Volume mappings
+    volumes:
+      # Mount initialization SQL script
+      # All .sql files in /docker-entrypoint-initdb.d/ run automatically on first startup
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      
+      # Persist MySQL data on host machine
+      # This ensures data survives container restarts
+      - mysql_data:/var/lib/mysql
+    
+    # Health check to ensure MySQL is ready
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-rootpassword123}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    
+    # Network configuration
+    networks:
+      - pizza_network
+
+# Named volume for MySQL data persistence
+volumes:
+  mysql_data:
+    driver: local
+
+# Custom network for the application
+networks:
+  pizza_network:
+    driver: bridge

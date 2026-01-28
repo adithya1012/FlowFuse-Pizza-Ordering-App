@@ -18,6 +18,9 @@ const SignUp: React.FC = () => {
     confirmPassword: '',
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [apiError, setApiError] = useState('');
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({
@@ -29,6 +32,8 @@ const SignUp: React.FC = () => {
       ...errors,
       [name]: '',
     });
+    // Clear API error
+    setApiError('');
   };
 
   const validateForm = (): boolean => {
@@ -77,22 +82,45 @@ const SignUp: React.FC = () => {
     return isValid;
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setApiError('');
 
     if (validateForm()) {
-      // TODO: Backend integration will be added here
-      // This is where the API call to create a new user will happen
-      // TODO: Send user data to backend API for registration
-      // TODO: Handle API response and store authentication token
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { confirmPassword, ...userData } = formData;
-      console.log('Sign up form submitted:', userData);
-      console.log('TODO: Call backend API endpoint to create new user');
-      
-      // Navigate to home page after successful form validation
-      // In the future, this will only happen after successful API registration
-      navigate('/home');
+      setIsLoading(true);
+
+      try {
+        // Call backend signup API
+        const response = await fetch('http://localhost:3000/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            password: formData.password,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          // Signup successful
+          console.log('✅ Signup successful:', data);
+          
+          // Navigate to login page
+          navigate('/');
+        } else {
+          // Signup failed
+          setApiError(data.message || 'Registration failed. Please try again.');
+        }
+      } catch (error) {
+        console.error('❌ Signup error:', error);
+        setApiError('Unable to connect to server. Please try again.');
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -100,6 +128,7 @@ const SignUp: React.FC = () => {
     <div className="auth-container">
       <div className="auth-card">
         <h2>Sign Up</h2>
+        {apiError && <div className="error-message">{apiError}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="name">Name</label>
@@ -155,8 +184,8 @@ const SignUp: React.FC = () => {
             )}
           </div>
 
-          <button type="submit" className="btn-primary">
-            Sign Up
+          <button type="submit" className="btn-primary" disabled={isLoading}>
+            {isLoading ? 'Creating account...' : 'Sign Up'}
           </button>
         </form>
 

@@ -1,0 +1,9 @@
+# Ignore environment file with credentials
+.env
+
+# Ignore MySQL data directory if mounted locally
+mysql_data/
+data/
+
+# Ignore logs
+*.log
