@@ -145,6 +145,92 @@ async function ordersRoutes(fastify, options) {
       });
     }
   });
+
+  /**
+   * GET /orders/:userId
+   * Retrieve all orders for a specific user
+   * 
+   * Route parameter:
+   * - userId: number - ID of the user whose orders to fetch
+   * 
+   * Response format:
+   * {
+   *   "success": true,
+   *   "userId": number,
+   *   "orders": [
+   *     {
+   *       "orderId": number,
+   *       "items": array,
+   *       "totalAmount": number,
+   *       "createdAt": string (ISO 8601)
+   *     }
+   *   ]
+   * }
+   */
+  fastify.get('/orders/:userId', async (request, reply) => {
+    try {
+      const { userId } = request.params;
+
+      // Validate userId parameter
+      if (!userId) {
+        return reply.status(400).send({
+          success: false,
+          message: 'userId parameter is required'
+        });
+      }
+
+      // Convert userId to number and validate
+      const userIdNum = parseInt(userId, 10);
+      if (isNaN(userIdNum) || userIdNum < 1) {
+        return reply.status(400).send({
+          success: false,
+          message: 'userId must be a valid positive integer'
+        });
+      }
+
+      // Query database for all orders belonging to this user
+      // Sort by created_at DESC to show latest orders first
+      const [orders] = await db.query(
+        `SELECT 
+          order_id, 
+          user_id, 
+          items, 
+          total_amount, 
+          created_at 
+        FROM orders 
+        WHERE user_id = ? 
+        ORDER BY created_at DESC`,
+        [userIdNum]
+      );
+
+      // Transform database rows to API response format
+      // Parse JSON items column for each order
+      const formattedOrders = orders.map((order) => ({
+        orderId: order.order_id,
+        items: typeof order.items === 'string' ? JSON.parse(order.items) : order.items,
+        totalAmount: parseFloat(order.total_amount),
+        createdAt: order.created_at.toISOString()
+      }));
+
+      // Log order retrieval
+      console.log(`\n📋 Fetched ${formattedOrders.length} orders for User ID: ${userIdNum}`);
+
+      // Return orders list
+      return reply.status(200).send({
+        success: true,
+        userId: userIdNum,
+        orders: formattedOrders
+      });
+
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+      return reply.status(500).send({
+        success: false,
+        message: 'Internal server error',
+        error: error.message
+      });
+    }
+  });
 }
 
 module.exports = ordersRoutes;

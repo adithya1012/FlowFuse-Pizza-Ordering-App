@@ -40,6 +40,23 @@
   align-items: center;
 }
 
+.btn-orders {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid white;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-orders:hover {
+  background: white;
+  color: #667eea;
+}
+
 .btn-cart {
   background: white;
   color: #667eea;
@@ -150,6 +167,16 @@
 
   .category-title {
     font-size: 24px;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn-orders,
+  .btn-cart {
+    width: 100%;
   }
 
   .pizza-grid {

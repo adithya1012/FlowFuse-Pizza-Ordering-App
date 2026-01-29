@@ -97,7 +97,7 @@ const Cart: React.FC = () => {
                 Order ID: <strong>#{orderConfirmation.orderId}</strong>
               </p>
               <p className="order-total">
-                Total Amount: <strong>₹{orderConfirmation.totalAmount.toFixed(2)}</strong>
+                Total Amount: <strong>${orderConfirmation.totalAmount.toFixed(2)}</strong>
               </p>
             </div>
             <p className="confirmation-message">
@@ -138,7 +138,7 @@ const Cart: React.FC = () => {
                       {item.pizza.category === 'special' && '⭐ Special'}
                     </p>
                     <p className="item-price">
-                      ₹{item.pizza.cost.toFixed(2)} x {item.quantity} = ₹
+                      ${item.pizza.cost.toFixed(2)} x {item.quantity} = $
                       {(item.pizza.cost * item.quantity).toFixed(2)}
                     </p>
                   </div>
@@ -164,7 +164,7 @@ const Cart: React.FC = () => {
               </div>
               <div className="summary-row total">
                 <span className="summary-label">Total Cost:</span>
-                <span className="summary-value">₹{getTotalCost().toFixed(2)}</span>
+                <span className="summary-value">${getTotalCost().toFixed(2)}</span>
               </div>
               <button 
                 className="btn-checkout" 

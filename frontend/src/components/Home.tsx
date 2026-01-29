@@ -58,6 +58,9 @@ const Home: React.FC = () => {
             <p>Choose from our delicious selection of pizzas</p>
           </div>
           <div className="header-actions">
+            <button className="btn-orders" onClick={() => navigate('/orders')}>
+              📦 My Orders
+            </button>
             <button className="btn-cart" onClick={() => navigate('/cart')}>
               🛒 Cart ({getTotalItems()})
             </button>
