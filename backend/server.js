@@ -1,5 +1,6 @@
 const fastify = require('fastify')({ logger: true });
 const cors = require('@fastify/cors');
+const db = require('./config/database');
 
 // Register CORS to allow frontend requests
 fastify.register(cors, {
@@ -7,8 +8,12 @@ fastify.register(cors, {
   credentials: true
 });
 
+// Decorate fastify instance with database connection
+fastify.decorate('mysql', db);
+
 // Register routes
 fastify.register(require('./routes/auth'));
+fastify.register(require('./routes/orders'));
 
 // Health check endpoint
 fastify.get('/', async (request, reply) => {

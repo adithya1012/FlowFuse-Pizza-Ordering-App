@@ -194,6 +194,113 @@
   opacity: 0.9;
 }
 
+.btn-checkout:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Order Confirmation */
+.order-confirmation {
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.confirmation-icon {
+  font-size: 64px;
+  margin-bottom: 20px;
+  animation: scaleIn 0.5s ease-in;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.order-confirmation h2 {
+  color: #2ecc71;
+  font-size: 28px;
+  margin: 0 0 30px 0;
+}
+
+.confirmation-details {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.order-id {
+  font-size: 18px;
+  color: #333;
+  margin: 0 0 10px 0;
+}
+
+.order-id strong {
+  color: #667eea;
+  font-size: 20px;
+}
+
+.order-total {
+  font-size: 18px;
+  color: #333;
+  margin: 0;
+}
+
+.order-total strong {
+  color: #2ecc71;
+  font-size: 20px;
+}
+
+.confirmation-message {
+  color: #666;
+  font-size: 16px;
+  margin: 20px 0 30px 0;
+}
+
+/* Error Message */
+.error-message {
+  background: #fee;
+  border: 1px solid #fcc;
+  border-radius: 8px;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  color: #c33;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+.error-icon {
+  font-size: 24px;
+}
+
 @media (max-width: 768px) {
   .cart-header h1 {
     font-size: 24px;
@@ -225,5 +332,27 @@
 
   .summary-row.total .summary-value {
     font-size: 20px;
+  }
+
+  .order-confirmation {
+    padding: 30px 20px;
+  }
+
+  .order-confirmation h2 {
+    font-size: 24px;
+  }
+
+  .confirmation-icon {
+    font-size: 48px;
+  }
+
+  .order-id,
+  .order-total {
+    font-size: 16px;
+  }
+
+  .order-id strong,
+  .order-total strong {
+    font-size: 18px;
   }
 }

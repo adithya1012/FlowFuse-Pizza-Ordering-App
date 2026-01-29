@@ -54,6 +54,43 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE INDEX idx_created_at ON users(created_at);
 
 -- ============================================================================
+-- Table: orders
+-- Purpose: Store pizza order details
+-- ============================================================================
+
+CREATE TABLE IF NOT EXISTS orders (
+    -- Primary key: Auto-incrementing order ID
+    order_id INT AUTO_INCREMENT PRIMARY KEY,
+    
+    -- User ID who placed the order
+    -- References users table (foreign key relationship)
+    user_id INT NOT NULL,
+    
+    -- Order items stored as JSON
+    -- Contains array of pizza objects with id, name, cost, quantity
+    -- Example: [{"pizzaId": 1, "name": "Margherita", "cost": 299, "quantity": 2}]
+    items JSON NOT NULL,
+    
+    -- Total amount for the order
+    -- DECIMAL(10,2) allows values up to 99,999,999.99
+    total_amount DECIMAL(10, 2) NOT NULL,
+    
+    -- Timestamp for when the order was created
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    -- Index on user_id for faster lookups of user's orders
+    INDEX idx_user_id (user_id),
+    
+    -- Index on created_at for sorting orders by date
+    INDEX idx_order_created_at (created_at),
+    
+    -- Foreign key constraint (optional - can be added later)
+    -- FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    
+    CONSTRAINT chk_total_amount CHECK (total_amount >= 0)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================================================
 -- Backend Integration Notes (TODO)
 -- ============================================================================
 -- 

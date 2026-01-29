@@ -1,22 +1,78 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import './Cart.css';
 
 const Cart: React.FC = () => {
   const navigate = useNavigate();
-  const { cartItems, removeFromCart, getTotalCost } = useCart();
+  const { cartItems, removeFromCart, getTotalCost, clearCart } = useCart();
+  
+  const [isLoading, setIsLoading] = useState(false);
+  const [orderConfirmation, setOrderConfirmation] = useState<{
+    orderId: number;
+    totalAmount: number;
+  } | null>(null);
+  const [error, setError] = useState('');
 
   // Handle checkout
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
+    // Get user data from localStorage
+    const userStr = localStorage.getItem('user');
+    if (!userStr) {
+      setError('Please log in to place an order');
+      setTimeout(() => navigate('/login'), 2000);
+      return;
+    }
+
+    const user = JSON.parse(userStr);
+    const userId = user.id;
     const totalAmount = getTotalCost();
-    // TODO: When backend is integrated, this will call the checkout API
-    // TODO: Send order details to backend server
-    // TODO: Process payment through payment gateway
-    // TODO: Generate order confirmation
-    console.log(`Total amount to pay: $${totalAmount.toFixed(2)}`);
-    
-    // TODO: Show success message or navigate to order confirmation page
+
+    // Prepare order items in the format expected by backend
+    const items = cartItems.map((item) => ({
+      pizzaId: item.pizza.id,
+      name: item.pizza.name,
+      cost: item.pizza.cost,
+      quantity: item.quantity,
+    }));
+
+    setIsLoading(true);
+    setError('');
+
+    try {
+      // Send order to backend
+      const response = await fetch('http://localhost:3000/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId,
+          items,
+          totalAmount,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        // Order placed successfully
+        setOrderConfirmation({
+          orderId: data.order.orderId,
+          totalAmount: data.order.totalAmount,
+        });
+        // Clear the cart
+        clearCart();
+      } else {
+        // Order failed
+        setError(data.message || 'Failed to place order. Please try again.');
+      }
+    } catch (err) {
+      console.error('Checkout error:', err);
+      setError('Unable to connect to server. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -31,7 +87,38 @@ const Cart: React.FC = () => {
       </header>
 
       <main className="cart-content">
-        {cartItems.length === 0 ? (
+        {/* Order Confirmation */}
+        {orderConfirmation && (
+          <div className="order-confirmation">
+            <div className="confirmation-icon">✅</div>
+            <h2>Order Placed Successfully!</h2>
+            <div className="confirmation-details">
+              <p className="order-id">
+                Order ID: <strong>#{orderConfirmation.orderId}</strong>
+              </p>
+              <p className="order-total">
+                Total Amount: <strong>₹{orderConfirmation.totalAmount.toFixed(2)}</strong>
+              </p>
+            </div>
+            <p className="confirmation-message">
+              Thank you for your order! Your delicious pizzas are being prepared.
+            </p>
+            <button className="btn-primary" onClick={() => navigate('/home')}>
+              Order More Pizzas
+            </button>
+          </div>
+        )}
+
+        {/* Error Message */}
+        {error && (
+          <div className="error-message">
+            <span className="error-icon">⚠️</span>
+            {error}
+          </div>
+        )}
+
+        {/* Cart Content */}
+        {!orderConfirmation && cartItems.length === 0 ? (
           <div className="empty-cart">
             <p>Your cart is empty</p>
             <button className="btn-primary" onClick={() => navigate('/home')}>
@@ -51,7 +138,7 @@ const Cart: React.FC = () => {
                       {item.pizza.category === 'special' && '⭐ Special'}
                     </p>
                     <p className="item-price">
-                      ${item.pizza.cost.toFixed(2)} x {item.quantity} = $
+                      ₹{item.pizza.cost.toFixed(2)} x {item.quantity} = ₹
                       {(item.pizza.cost * item.quantity).toFixed(2)}
                     </p>
                   </div>
@@ -77,10 +164,14 @@ const Cart: React.FC = () => {
               </div>
               <div className="summary-row total">
                 <span className="summary-label">Total Cost:</span>
-                <span className="summary-value">${getTotalCost().toFixed(2)}</span>
+                <span className="summary-value">₹{getTotalCost().toFixed(2)}</span>
               </div>
-              <button className="btn-checkout" onClick={handleCheckout}>
-                Checkout
+              <button 
+                className="btn-checkout" 
+                onClick={handleCheckout}
+                disabled={isLoading}
+              >
+                {isLoading ? 'Placing Order...' : 'Checkout'}
               </button>
             </div>
           </>

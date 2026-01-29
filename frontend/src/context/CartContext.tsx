@@ -9,6 +9,7 @@ interface CartContextType {
   removeFromCart: (pizzaId: number) => void;
   getTotalCost: () => number;
   getTotalItems: () => number;
+  clearCart: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -70,6 +71,11 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return cartItems.reduce((total, item) => total + item.quantity, 0);
   };
 
+  // Clear cart after successful order
+  const clearCart = () => {
+    setCartItems([]);
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -78,6 +84,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         removeFromCart,
         getTotalCost,
         getTotalItems,
+        clearCart,
       }}
     >
       {children}
