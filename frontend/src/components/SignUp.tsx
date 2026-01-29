@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getApiUrl } from '../config/api';
 import './Auth.css';
 
 const SignUp: React.FC = () => {
@@ -91,7 +92,7 @@ const SignUp: React.FC = () => {
 
       try {
         // Call backend signup API
-        const response = await fetch('http://localhost:3000/signup', {
+        const response = await fetch(getApiUrl('/signup'), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

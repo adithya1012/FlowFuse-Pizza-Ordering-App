@@ -1,0 +1,127 @@
+# Docker Compose Configuration for Pizza Ordering Application
+# 
+# This file orchestrates three services:
+# 1. database (MySQL) - Stores users and orders
+# 2. backend (Node.js + Fastify) - REST API server
+# 3. frontend (React + Nginx) - User interface
+#
+# Service Communication:
+# - Frontend → Backend: Via nginx proxy (/api/* → http://backend:3000/*)
+# - Backend → Database: Via service name 'database' on internal port 3306
+# - All services run on the same Docker network (pizza_network)
+
+services:
+  # MySQL Database Service
+  database:
+    image: mysql:8.0
+    container_name: pizza_database
+    restart: unless-stopped
+    
+    # Environment variables for MySQL initialization
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword123
+      MYSQL_DATABASE: pizza_app_db
+      MYSQL_USER: pizza_user
+      MYSQL_PASSWORD: pizza_password123
+    
+    # Mount initial schema for database tables
+    volumes:
+      - mysql_data:/var/lib/mysql              # Persist database data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql  # Load schema on first run
+    
+    # Internal port only (not exposed to host for security)
+    expose:
+      - "3306"
+    
+    # Health check to ensure database is ready
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "pizza_user", "-ppizza_password123"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    
+    networks:
+      - pizza_network
+
+  # Backend API Service (Node.js + Fastify)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: pizza_backend
+    restart: unless-stopped
+    
+    # Environment variables for backend configuration
+    environment:
+      # Database connection settings
+      DB_HOST: database           # Use service name for internal communication
+      DB_PORT: 3306               # Internal MySQL port (not host-mapped port)
+      DB_USER: pizza_user
+      DB_PASSWORD: pizza_password123
+      DB_NAME: pizza_app_db
+      
+      # Node environment
+      NODE_ENV: production
+    
+    # Wait for database to be healthy before starting
+    depends_on:
+      database:
+        condition: service_healthy
+    
+    # Internal port only (accessed via frontend nginx proxy)
+    expose:
+      - "3000"
+    
+    # Health check for backend
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    networks:
+      - pizza_network
+
+  # Frontend Service (React + Nginx)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: pizza_frontend
+    restart: unless-stopped
+    
+    # Expose frontend to host machine
+    ports:
+      - "8080:80"  # Map host port 8080 to container port 80
+    
+    # Wait for backend to be healthy before starting
+    depends_on:
+      backend:
+        condition: service_healthy
+    
+    # Health check for frontend
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /usr/share/nginx/html/index.html"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    
+    networks:
+      - pizza_network
+
+# Docker Networks
+# All services communicate on this internal network
+networks:
+  pizza_network:
+    driver: bridge
+    name: pizza_network
+
+# Docker Volumes
+# Persist MySQL data across container restarts
+volumes:
+  mysql_data:
+    driver: local
+    name: pizza_mysql_data

@@ -25,6 +25,12 @@ const Home: React.FC = () => {
     // TODO: Show success notification/toast message
   };
 
+  // Handle logout
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    navigate('/');
+  };
+
   const renderPizzaCategory = (title: string, categoryPizzas: Pizza[]) => {
     if (categoryPizzas.length === 0) return null;
 
@@ -64,7 +70,9 @@ const Home: React.FC = () => {
             <button className="btn-cart" onClick={() => navigate('/cart')}>
               🛒 Cart ({getTotalItems()})
             </button>
-            {/* TODO: Add user profile/logout button when authentication is implemented */}
+            <button className="btn-logout" onClick={handleLogout}>
+              🚪 Logout
+            </button>
           </div>
         </div>
       </header>

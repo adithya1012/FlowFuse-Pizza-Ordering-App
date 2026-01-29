@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getApiUrl } from '../config/api';
 import './Auth.css';
 
 const Login: React.FC = () => {
@@ -67,7 +68,7 @@ const Login: React.FC = () => {
 
       try {
         // Call backend login API
-        const response = await fetch('http://localhost:3000/login', {
+        const response = await fetch(getApiUrl('/login'), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

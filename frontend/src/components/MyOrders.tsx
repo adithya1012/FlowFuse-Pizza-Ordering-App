@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getApiUrl } from '../config/api';
 import './MyOrders.css';
 
 interface OrderItem {
@@ -56,7 +57,7 @@ const MyOrders: React.FC = () => {
       const userId = user.id;
 
       // Call backend API to fetch orders
-      const response = await fetch(`http://localhost:3000/orders/${userId}`, {
+      const response = await fetch(getApiUrl(`/orders/${userId}`), {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

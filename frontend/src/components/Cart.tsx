@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { getApiUrl } from '../config/api';
 import './Cart.css';
 
 const Cart: React.FC = () => {
@@ -41,7 +42,7 @@ const Cart: React.FC = () => {
 
     try {
       // Send order to backend
-      const response = await fetch('http://localhost:3000/orders', {
+      const response = await fetch(getApiUrl('/orders'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
