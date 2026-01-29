@@ -340,7 +340,8 @@ My Orders (History)
 
 ### System Design Recording
 
-[![System Design Video](https://img.shields.io/badge/Video-System_Design-red?style=for-the-badge&logo=youtube)](https://purdue0-my.sharepoint.com/:v:/g/personal/seesa01_purdue_edu/IQBwzrXL9VjeS5jYhG3AZaJ0ASeanGFpB3tlZtz27bUJ44A?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=U7FoWh)
+[![System Design Video](https://img.shields.io/badge/Video-System_Design-red?style=for-the-badge&logo=youtube)](https://purdue0-my.sharepoint.com/:v:/g/personal/seesa01_purdue_edu/IQBwzrXL9VjeS5jYhG3AZaJ0ASeanGFpB3tlZtz27bUJ44A?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=RFO1uE)
+
 
 The system design video should cover:
 - Overall architecture explanation
